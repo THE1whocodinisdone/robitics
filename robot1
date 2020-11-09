@@ -1,0 +1,78 @@
+// Variables
+/*
+- Motors: red facing up
+- Right/Left in terms of the person working on it
+*/
+int speed = 30;
+int lmotor = 1; 
+int rmotor = 2;
+int fast_pause = 1000;
+int slow_pause = 2000;
+int quadrupul_pause = 8000;
+int leftBump = 8;
+int rightBump = 9;
+int counter = 0;
+
+// Functions
+void forward() {
+  printf("Move forward\n"); // text to ensure action
+  motor(lmotor, speed); // port 0, 50% forward
+  motor(rmotor, speed); // port 2, 50% forward
+  //  msleep(sleepAmount); // last action for 2 sec
+  ao(); // Stop all motors
+}
+
+void backward(int sleepAmount) {
+  printf("Move backwards\n"); // text to ensure action
+  motor(lmotor, -speed); // port 2, 50% backward
+  motor(rmotor, -speed); // port 2, 50% backward
+  msleep(sleepAmount); // last action for 2 sec
+  ao(); // Stop all motors
+}
+
+void left(int sleepAmount) {
+  printf("Move left\n"); // text to ensure action
+  motor(rmotor, -speed); // port 2, 50% for.ward
+  motor(lmotor, speed); // port 2, 50% for.ward
+  msleep(sleepAmount); // last action for 2 sec
+  ao(); // Stop all motors
+}
+
+void right(int sleepAmount) {
+  printf("Move right\n"); // text to ensure action
+  motor(rmotor, speed); // port 2, 50% backward
+  motor(lmotor, -speed); // port 2, 50% backward
+  msleep(sleepAmount); // last action for 2 sec
+  ao(); // Stop all motors
+}
+
+int main() {
+    shut_down_in(305);
+
+    printf("Dwelling the Forest\n");
+    
+    while (1) {
+      forward();
+      if (digital(leftBump)) {
+        backward(2000);
+        right(2000);
+        counter++;
+      }
+      if (digital(rightBump)) {
+        backward(2000);
+        left(2000);
+        counter++;
+      }
+      if(counter == 3){ // evasive action
+        printf("Performing evasive maneuver...\n");
+        backward(2500);
+        left(2000);
+        counter = 0;
+        printf("Evasive maneuver succeeded!\n");
+      }
+    }
+    digital(leftBump);
+    digital(rightBump);
+    printf("Looping exited\n");
+    return 0;
+}
